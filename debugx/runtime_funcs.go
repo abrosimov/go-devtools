@@ -1,4 +1,5 @@
-package devtools
+// Package debugx provides some useful functions for debugging.
+package debugx
 
 import (
 	"fmt"

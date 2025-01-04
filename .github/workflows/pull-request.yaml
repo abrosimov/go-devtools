@@ -1,4 +1,4 @@
-name: Regular
+name: Pull Request
 
 on:
   push:
