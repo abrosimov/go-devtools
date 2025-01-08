@@ -12,7 +12,8 @@ permissions:
 jobs:
   prepare:
     name: "Prepare"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # TODO: use LTS images.
+    # Also, please
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -37,6 +38,10 @@ jobs:
         uses: golangci/golangci-lint-action@v6
         with:
           version: v1.61.0
+      - name: Run staticcheck
+        uses: dominikh/staticcheck-action@v1
+        with:
+          version: v1.3.1
       - name: Run tests
         run: go test -v ./...
       - name: Run GoReleaser
