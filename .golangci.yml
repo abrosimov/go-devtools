@@ -1,7 +1,7 @@
 run:
   modules-download-mode: readonly
   allow-parallel-runners: true
-  timeout: 60m
+  timeout: 1m
 
 issues:
   max-same-issues: 0
@@ -16,7 +16,7 @@ linters-settings:
     lines: 50
     statements: 50
   gci:
-    prefix: github.com/abrosimov/go-provider
+    prefix: github.com/abrosimov/go-devtools
   goconst:
     min-len: 2
     min-occurrences: 2
@@ -34,10 +34,10 @@ linters-settings:
       hugeParam:
         sizeThreshold: 33
   goimports:
-    local-prefixes: github.com/abrosimov/go-typeutils
+    local-prefixes: github.com/abrosimov/go-devtools
 
   gocyclo:
-    min-complexity: 16
+    min-complexity: 10
 
   forbidigo:
     forbid:

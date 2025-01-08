@@ -50,3 +50,10 @@ func TestGetCallee(t *testing.T) {
 		}
 	}()
 }
+
+func TestGetStackTrace(t *testing.T) {
+	stackTrace := debugx.GetStackTrace()
+	if !strings.Contains(stackTrace, "github.com/abrosimov/go-devtools/debugx_test.TestGetStackTrace") {
+		t.Errorf("Can't find TestGetStackTrace in the stack trace")
+	}
+}
