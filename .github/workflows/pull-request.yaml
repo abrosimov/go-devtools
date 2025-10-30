@@ -27,12 +27,12 @@ jobs:
       - name: Building
         run: go build -v ./...
       - name: Lint
-        uses: golangci/golangci-lint-action@v7
+        uses: golangci/golangci-lint-action@v8
         with:
           version: v2.6.0
       - name: Run staticcheck
         uses: dominikh/staticcheck-action@v1
         with:
-          version: v0.5.1
+          version: v0.6.1
       - name: Run tests
         run: go test -v ./...
