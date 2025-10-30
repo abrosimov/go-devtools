@@ -27,7 +27,7 @@ jobs:
       - name: Building
         run: go build -v ./...
       - name: Lint
-        uses: golangci/golangci-lint-action@v6
+        uses: golangci/golangci-lint-action@v7
         with:
           version: v2.6.0
       - name: Run staticcheck
