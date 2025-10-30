@@ -29,6 +29,8 @@ func getFuncNameInStack(skip int) string {
 	return fmt.Sprintf("%s:%d", frame.Function, frame.Line)
 }
 
+var funcArgAddressesRegex = regexp.MustCompile(`\(0x.*?\)`)
+
 // GetStackTrace returns the stack trace of the current goroutine.
 func GetStackTrace() string {
 	const maxStackSize = 4096
@@ -37,23 +39,26 @@ func GetStackTrace() string {
 	s := string(b[:n])
 
 	calls := strings.Split(strings.TrimSpace(s), "\n")
-	captureFuncArgAddresses := regexp.MustCompile(`\(0x.*?\)`)
+	return formatStackTrace(calls)
+}
 
-	/*
-		Input format:
-		goroutine 18 [running]:
-		github.com/abrosimov/go-devtools/debugx.GetStackTrace()
-			/Users/kirillabrosimov/Projects/go-devtools/debugx/runtime_funcs.go:34 +0x50
-		github.com/abrosimov/go-devtools/debugx_test.TestGetStackTrace(0x140000b0680)
-			/Users/kirillabrosimov/Projects/go-devtools/debugx/runtime_funcs_test.go:57 +0x24
-
-		So we need to put tabbed lines to the previous line with removing unnecessary things.
-	*/
+// formatStackTrace processes raw stack trace lines into human-readable format.
+// Input format:
+//
+//	goroutine 18 [running]:
+//	github.com/abrosimov/go-devtools/debugx.GetStackTrace()
+//		/Users/kirillabrosimov/Projects/go-devtools/debugx/runtime_funcs.go:34 +0x50
+//	github.com/abrosimov/go-devtools/debugx_test.TestGetStackTrace(0x140000b0680)
+//		/Users/kirillabrosimov/Projects/go-devtools/debugx/runtime_funcs_test.go:57 +0x24
+//
+// It combines tabbed lines (file locations) with the previous line (function name)
+// and removes memory addresses from function arguments.
+func formatStackTrace(calls []string) string {
 	result := make([]string, 0, len(calls))
 	lastWrittenIdx := 0
 	skipNext := false
+
 	for i := 0; i < len(calls); i++ {
-		// skipNext and line comparison with "...debugx.GetStackTrace()" is needed to skip the line with GetStackTrace() call.
 		if skipNext {
 			skipNext = false
 			continue
@@ -65,18 +70,24 @@ func GetStackTrace() string {
 			continue
 		}
 
-		if line[0] == '\t' {
-			split := strings.Split(strings.TrimSpace(line), " ")
-			if len(split) == 0 {
-				//nolint:godox // I really not sure that I need use log here, however, might be it'd be better to di it. But structured or not?
-				// TODO: log error?
-				continue
+		if line != "" && line[0] == '\t' {
+			location := extractFileLocation(line)
+			if location != "" {
+				result[lastWrittenIdx] = fmt.Sprintf("%s at %s", result[lastWrittenIdx], location)
 			}
-			result[lastWrittenIdx] = fmt.Sprintf("%s at %s", result[lastWrittenIdx], split[0])
 		} else {
-			result = append(result, captureFuncArgAddresses.ReplaceAllString(line, "(...)"))
+			result = append(result, funcArgAddressesRegex.ReplaceAllString(line, "(...)"))
 			lastWrittenIdx = len(result) - 1
 		}
 	}
 	return strings.Join(result, "\n")
+}
+
+// extractFileLocation extracts the file path and line number from a tabbed stack trace line.
+func extractFileLocation(line string) string {
+	split := strings.Split(strings.TrimSpace(line), " ")
+	if len(split) == 0 {
+		return ""
+	}
+	return split[0]
 }

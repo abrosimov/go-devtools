@@ -12,8 +12,9 @@ func IsInterface[T any]() bool {
 	return t.Kind() == reflect.Interface
 }
 
-// IfTypeHasPtrToV return true if T has a field with type *V, otherwise false.
-func IfTypeHasPtrToV[T any, V any]() bool {
+// HasPtrFieldOfType returns true if T has a field with type *V, otherwise false.
+// Only checks direct fields, not embedded fields.
+func HasPtrFieldOfType[T any, V any]() bool {
 	t := reflect.TypeFor[T]()
 	if t.Kind() != reflect.Struct {
 		return false
