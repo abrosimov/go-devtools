@@ -1,4 +1,6 @@
 // Package typesx provides some type-related functions.
+//
+// Deprecated: this package moved to github.com/abrosimov/go-core/typesx.
 package typesx
 
 import (

@@ -1,3 +1,13 @@
 # go-devtools
-Just a small personal collection of auxiliary functions for go development.
-Some packages have suffix "x" to avoid naming conflicts with standard library when both used in the code.
+
+**Migrated.** This module has been absorbed into
+[`github.com/abrosimov/go-core`](https://github.com/abrosimov/go-core):
+
+| Package    | New home                                | Notes                                         |
+| ---------- | --------------------------------------- | --------------------------------------------- |
+| `typesx`   | `github.com/abrosimov/go-core/typesx`   | moved as-is                                   |
+| `debugx`   | `github.com/abrosimov/go-core/debugx`   | moved as-is                                   |
+| `bgworker` | `github.com/abrosimov/go-core/bgworker` | draft completed into a working implementation |
+
+No further development happens here; published tags remain available
+through the Go module proxy indefinitely.

@@ -1,5 +1,9 @@
 //go:build ignore
 
+// Package bgworker was a draft that never compiled as part of this module.
+//
+// Deprecated: a completed implementation lives at
+// github.com/abrosimov/go-core/bgworker.
 package bgworker
 
 import (

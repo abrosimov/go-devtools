@@ -1,4 +1,6 @@
 // Package debugx provides some useful functions for debugging.
+//
+// Deprecated: this package moved to github.com/abrosimov/go-core/debugx.
 package debugx
 
 import (
