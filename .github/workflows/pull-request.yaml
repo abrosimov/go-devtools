@@ -36,3 +36,15 @@ jobs:
           version: v0.6.1
       - name: Run tests
         run: go test -v ./...
+
+  # The one check the baseline ruleset from gh-repo-settings requires: it
+  # stands for every job above, so the ruleset names a single check however
+  # this workflow's jobs change.
+  required:
+    name: required
+    if: always()
+    needs: [build]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: All jobs passed
+        run: test "${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}" = false
